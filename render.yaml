@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: isnip-preview
+    env: php
+    plan: free
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      touch database/database.sqlite
+      php artisan migrate --force
+      npm install && npm run build
+    startCommand: apachectl -D FOREGROUND
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        value: base64:tE9vWpX3gRhKjLYdfN9XqM6YgSTUVwXYzABcDEfGHIJ= 
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: DB_DATABASE
+        value: database/database.sqlite

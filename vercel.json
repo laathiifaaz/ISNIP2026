@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "framework": "laravel",
+  "builds": [
+    {
+      "src": "public/index.php",
+      "use": "@vercel/php"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/index.php"
+    }
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "APP_KEY": "base64:tE9vWpX3gRhKjLYdfN9XqM6YgSTUVwXYzABcDEfGHIJ=",
+    "DB_CONNECTION": "sqlite",
+    "DB_DATABASE": "database/database.sqlite"
+  }
+}

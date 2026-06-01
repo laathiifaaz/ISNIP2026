@@ -128,7 +128,7 @@
                 <div class="flex items-center gap-4" x-data="{ profileOpen: false, notifyOpen: false }">
                     
                     <!-- Notification Bell -->
-                    <div class="relative">
+                    <div class="relative" x-data="{ notifyOpen: false }">
                         <button class="text-slate-400 hover:text-slate-600 transition" @click="notifyOpen = !notifyOpen">
                             <span class="absolute top-0.5 right-0.5 block h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -155,7 +155,7 @@
                     <span class="h-6 w-px bg-slate-200"></span>
                     
                     <!-- Profile card -->
-                    <div class="relative">
+                    <div class="relative" x-data="{ profileOpen: false }">
                         <button class="flex items-center gap-3 text-left focus:outline-none" @click="profileOpen = !profileOpen">
                             <div class="flex flex-col text-right">
                                 @auth

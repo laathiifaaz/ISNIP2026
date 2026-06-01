@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-indigo-50: #f0f7fc;   /* Latar belakang alert / soft card bg */
+    --color-indigo-100: #e1eff8;  /* Efek hover pada elemen light */
+    --color-indigo-200: #bcdcf2;  /* Garis border tipis / aksen */
+    --color-indigo-300: #83bfe5;  /* Warna pelengkap grafik */
+    --color-indigo-400: #429dd4;  /* Biru muda aksen aktif */
+    --color-indigo-500: #1c7ec2;  /* Biru transisi */
+    --color-indigo-600: #005A9C;  /* Main Color (Tombol, Badge Utama) */
+    --color-indigo-700: #004980;  /* Efek Hover pada tombol utama (Lebih tua) */
+    --color-indigo-800: #003e6b;  /* Teks judul atau link aktif */
+    --color-indigo-900: #042e4f;  /* Header pekat / teks utama */
+    --color-indigo-950: #021e36;  /* Latar belakang elemen dark mode */
+}

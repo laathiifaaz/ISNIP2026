@@ -26,11 +26,13 @@ class AnalysisJob extends Model
         'output_path',
         'logs',
         'results_data',
+        'request_payload',
     ];
 
     protected $casts = [
         'advanced_params' => 'array',
         'results_data' => 'array',
+        'request_payload' => 'array',
         'submit_date' => 'datetime',
         'start_date' => 'datetime',
         'finish_date' => 'datetime',
@@ -52,7 +54,7 @@ class AnalysisJob extends Model
         }
 
         $now = Carbon::now();
-        $submitDiff = $now->diffInSeconds($this->submit_date);
+        $submitDiff = Carbon::parse($this->submit_date)->diffInSeconds($now);
         $isUpdated = false;
 
         // 1. Fase Transisi dari SUBMITTED ke RUNNING
@@ -72,7 +74,7 @@ class AnalysisJob extends Model
         // 2. Fase Evaluasi Langkah Pipeline RUNNING
         if ($this->status === 'RUNNING') {
             $start = $this->start_date ? Carbon::parse($this->start_date) : Carbon::parse($this->submit_date)->addSeconds(5);
-            $elapsed = $now->diffInSeconds($start);
+            $elapsed = $start->diffInSeconds($now);
 
             // Step timeline:
             // 0 - 15s: alignment

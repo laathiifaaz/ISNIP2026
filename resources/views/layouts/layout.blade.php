@@ -130,7 +130,9 @@
                     <!-- Notification Bell -->
                     <div class="relative" x-data="{ notifyOpen: false }">
                         <button class="text-slate-400 hover:text-slate-600 transition" @click="notifyOpen = !notifyOpen">
-                            <span class="absolute top-0.5 right-0.5 block h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
+                            @if (($notificationJobs ?? collect())->isNotEmpty())
+                                <span class="absolute top-0.5 right-0.5 block h-1.5 w-1.5 rounded-full bg-indigo-600"></span>
+                            @endif
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
@@ -139,14 +141,43 @@
                         <div class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 text-xs" x-show="notifyOpen" @click.away="notifyOpen = false" x-cloak>
                             <div class="px-4 py-2 border-b border-slate-100 font-semibold text-slate-700">Notifications</div>
                             <div class="divide-y divide-slate-100">
-                                <div class="px-4 py-3 hover:bg-slate-50 flex flex-col gap-0.5">
-                                    <span class="font-medium text-slate-800">Job Completion</span>
-                                    <span class="text-slate-500 text-[10px]">Your job #JOB-88421 has completed successfully.</span>
-                                </div>
-                                <div class="px-4 py-3 hover:bg-slate-50 flex flex-col gap-0.5">
-                                    <span class="font-medium text-slate-800">Database Synchronized</span>
-                                    <span class="text-slate-500 text-[10px]">ClinVar 2023-Oct variants index updated.</span>
-                                </div>
+                                @forelse (($notificationJobs ?? collect()) as $notificationJob)
+                                    <a href="{{ route('jobs.show', $notificationJob->id) }}" class="px-4 py-3 hover:bg-slate-50 flex flex-col gap-0.5 transition">
+                                        <span class="font-medium text-slate-800">
+                                            @if ($notificationJob->status === 'FINISHED')
+                                                Job Completion
+                                            @elseif ($notificationJob->status === 'RUNNING')
+                                                Job Running
+                                            @elseif ($notificationJob->status === 'SUBMITTED')
+                                                Job Submitted
+                                            @elseif ($notificationJob->status === 'CANCELED')
+                                                Job Canceled
+                                            @else
+                                                Job Update
+                                            @endif
+                                        </span>
+                                        <span class="text-slate-500 text-[10px]">
+                                            @if ($notificationJob->status === 'FINISHED')
+                                                Your job #{{ $notificationJob->job_id }} has completed successfully.
+                                            @elseif ($notificationJob->status === 'RUNNING')
+                                                Your job #{{ $notificationJob->job_id }} is running at {{ str_replace('_', ' ', $notificationJob->current_step ?? 'pipeline') }}.
+                                            @elseif ($notificationJob->status === 'SUBMITTED')
+                                                Your job #{{ $notificationJob->job_id }} is queued for execution.
+                                            @elseif ($notificationJob->status === 'CANCELED')
+                                                Your job #{{ $notificationJob->job_id }} was canceled.
+                                            @else
+                                                Your job #{{ $notificationJob->job_id }} was updated.
+                                            @endif
+                                        </span>
+                                        <span class="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                                            {{ $notificationJob->updated_at->diffForHumans() }}
+                                        </span>
+                                    </a>
+                                @empty
+                                    <div class="px-4 py-4 text-slate-400 text-[10px] font-semibold uppercase tracking-wider">
+                                        No job notifications yet.
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>

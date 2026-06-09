@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class JobController extends Controller
 {
@@ -237,14 +238,8 @@ class JobController extends Controller
             return back()->withErrors(['error' => 'Reports can only be generated for finished jobs.']);
         }
 
-        // Return the printable template and force download
-        $html = view('reports.pdf_report', compact('job'))->render();
+        $pdf = Pdf::loadView('reports.pdf_report', compact('job'))->setPaper('a4', 'portrait');
 
-        $headers = [
-            'Content-Type' => 'text/html',
-            'Content-Disposition' => 'attachment; filename="' . $job->job_id . '_report.html"',
-        ];
-
-        return response($html, 200, $headers);
+        return $pdf->download($job->job_id . '_report.pdf');
     }
 }
